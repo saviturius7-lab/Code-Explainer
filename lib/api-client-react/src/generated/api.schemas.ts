@@ -8,3 +8,12 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface AnalyzeRepoRequest {
+  /** GitHub repository URL (e.g. https://github.com/owner/repo) */
+  repoUrl: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+}

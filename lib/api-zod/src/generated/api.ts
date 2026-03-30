@@ -14,3 +14,13 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Fetches all files from a GitHub repo and generates AI explanations
+ * @summary Analyze a GitHub repository
+ */
+export const AnalyzeRepoBody = zod.object({
+  repoUrl: zod
+    .string()
+    .describe("GitHub repository URL (e.g. https:\/\/github.com\/owner\/repo)"),
+});

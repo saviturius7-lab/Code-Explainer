@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Repo Explainer"
+version = "1.0.0"
+id = "artifacts/repo-explainer"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19580
+
+[services.development]
+run = "pnpm --filter @workspace/repo-explainer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/repo-explainer", "run", "build" ]
+publicDir = "artifacts/repo-explainer/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19580"
+BASE_PATH = "/"

@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: repo
+    description: Repository analysis operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /repo/analyze:
+    post:
+      operationId: analyzeRepo
+      tags: [repo]
+      summary: Analyze a GitHub repository
+      description: Fetches all files from a GitHub repo and generates AI explanations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeRepoRequest"
+      responses:
+        "200":
+          description: Analysis started - streams SSE events
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +66,18 @@ components:
           type: string
       required:
         - status
-
+    AnalyzeRepoRequest:
+      type: object
+      properties:
+        repoUrl:
+          type: string
+          description: GitHub repository URL (e.g. https://github.com/owner/repo)
+      required:
+        - repoUrl
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

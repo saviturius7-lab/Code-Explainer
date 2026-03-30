@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+:root {
+  /* Dark mode default - Code Editor Aesthetic */
+  --background: 240 10% 4%;
+  --foreground: 0 0% 98%;
+
+  --card: 240 10% 6%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 240 10% 6%;
+  --popover-foreground: 0 0% 98%;
+
+  /* Vibrant Cyan / Neon Blue */
+  --primary: 188 86% 53%;
+  --primary-foreground: 240 10% 4%;
+
+  --secondary: 240 10% 12%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 240 10% 12%;
+  --muted-foreground: 240 5% 65%;
+
+  /* Neon Green */
+  --accent: 142 71% 45%;
+  --accent-foreground: 240 10% 4%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 10% 16%;
+  --input: 240 10% 12%;
+  --ring: 188 86% 53%;
+
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/30 selection:text-primary-foreground;
+  }
+}
+
+/* Custom scrollbar for the code aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .print-container {
+    @apply p-8 max-w-none w-full bg-white text-black;
+  }
+
+  /* Make sure markdown looks good printed */
+  .prose {
+    color: black !important;
+    max-width: 100% !important;
+  }
+  .prose pre {
+    border: 1px solid #e5e7eb;
+    background: #f9fafb !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .prose code {
+    color: #111827 !important;
+  }
+  .prose h1, .prose h2, .prose h3 {
+    color: black !important;
+    page-break-after: avoid;
+  }
+}
+
+/* Markdown styling base */
+.prose-custom {
+  @apply text-foreground/90 max-w-none;
+}
+.prose-custom h1 { @apply text-3xl font-bold mt-8 mb-4 text-foreground; }
+.prose-custom h2 { @apply text-2xl font-semibold mt-6 mb-3 text-foreground; }
+.prose-custom h3 { @apply text-xl font-medium mt-5 mb-2 text-foreground; }
+.prose-custom p { @apply my-3 leading-relaxed; }
+.prose-custom ul { @apply list-disc list-outside ml-6 my-3; }
+.prose-custom ol { @apply list-decimal list-outside ml-6 my-3; }
+.prose-custom li { @apply mb-1; }
+.prose-custom a { @apply text-primary hover:underline underline-offset-2; }
+.prose-custom strong { @apply font-semibold text-foreground; }
+.prose-custom blockquote { @apply border-l-4 border-primary/50 pl-4 py-1 my-4 text-muted-foreground italic bg-secondary/30 rounded-r-md; }
+.prose-custom code:not(pre code) { @apply bg-secondary text-primary-foreground font-mono text-sm px-1.5 py-0.5 rounded border border-border/50; }
+.prose-custom pre { @apply bg-[#0d1117] rounded-lg my-4 overflow-hidden border border-border/50 shadow-lg; }
+.prose-custom table { @apply w-full text-left border-collapse my-4; }
+.prose-custom th { @apply border-b-2 border-border/80 p-2 font-semibold text-foreground; }
+.prose-custom td { @apply border-b border-border/50 p-2; }

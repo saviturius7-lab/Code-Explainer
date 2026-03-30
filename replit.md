@@ -1,3 +1,9 @@
+# Repo Explainer
+
+## What It Does
+
+A web app that takes a GitHub repository URL, fetches every file using the GitHub API, and uses AI (via Replit AI Integrations / OpenAI) to generate a detailed, file-by-file explanation of the entire codebase. The full report can be exported as a PDF.
+
 # Workspace
 
 ## Overview

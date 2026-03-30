@@ -5,18 +5,25 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  AnalyzeRepoRequest,
+  ErrorResponse,
+  HealthStatus,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +106,90 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Fetches all files from a GitHub repo and generates AI explanations
+ * @summary Analyze a GitHub repository
+ */
+export const getAnalyzeRepoUrl = () => {
+  return `/api/repo/analyze`;
+};
+
+export const analyzeRepo = async (
+  analyzeRepoRequest: AnalyzeRepoRequest,
+  options?: RequestInit,
+): Promise<string> => {
+  return customFetch<string>(getAnalyzeRepoUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(analyzeRepoRequest),
+  });
+};
+
+export const getAnalyzeRepoMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof analyzeRepo>>,
+    TError,
+    { data: BodyType<AnalyzeRepoRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof analyzeRepo>>,
+  TError,
+  { data: BodyType<AnalyzeRepoRequest> },
+  TContext
+> => {
+  const mutationKey = ["analyzeRepo"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof analyzeRepo>>,
+    { data: BodyType<AnalyzeRepoRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return analyzeRepo(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AnalyzeRepoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof analyzeRepo>>
+>;
+export type AnalyzeRepoMutationBody = BodyType<AnalyzeRepoRequest>;
+export type AnalyzeRepoMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Analyze a GitHub repository
+ */
+export const useAnalyzeRepo = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof analyzeRepo>>,
+    TError,
+    { data: BodyType<AnalyzeRepoRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof analyzeRepo>>,
+  TError,
+  { data: BodyType<AnalyzeRepoRequest> },
+  TContext
+> => {
+  return useMutation(getAnalyzeRepoMutationOptions(options));
+};

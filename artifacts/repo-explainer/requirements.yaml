@@ -1,0 +1,16 @@
+packages:
+  "framer-motion": "For smooth transitions and terminal-like text animations"
+  "react-markdown": "To safely render the AI generated explanations"
+  "remark-gfm": "For GitHub flavored markdown support in explanations"
+  "react-syntax-highlighter": "To beautifully format code blocks within explanations"
+  "lucide-react": "For beautiful crisp icons"
+
+images:
+  - path: "artifacts/repo-explainer/public/images/code-bg.png"
+    description: "Abstract dark cyberpunk background with subtle glowing cyan and green data streams and geometric code elements"
+    aspect_ratio: "16:9"
+
+notes:
+  - The API uses Server-Sent Events (SSE) at POST /api/repo/analyze.
+  - The SSE stream expects to send "data: { ...JSON... }\n\n".
+  - We use native window.print() with specific @media print CSS for perfect PDF exports instead of canvas screenshots to maintain text selectability and pagination.
